@@ -3,7 +3,6 @@
 namespace OlegTatarenko\Sitemap;
 
 use DateTime;
-use mysql_xdevapi\Exception;
 use OlegTatarenko\Sitemap\Exceptions\dirNotCreated;
 use OlegTatarenko\Sitemap\Exceptions\invalidChangeFreqs;
 use OlegTatarenko\Sitemap\Exceptions\invalidDateFormat;
