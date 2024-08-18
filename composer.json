@@ -1,0 +1,22 @@
+{
+    "name": "olegtatarenko/sitemap",
+    "description": "Library for generating a site map",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "autoload": {
+        "psr-4": {
+            "OlegTatarenko\\Sitemap\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "OlegTatarenko",
+            "email": "2206941@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    }
+}
+
+
