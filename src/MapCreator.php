@@ -9,7 +9,8 @@ namespace OlegTatarenko\Sitemap;
  */
 class MapCreator
 {
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @return string карта сайта в формате xml
      * */
     public static function createXML($pages)
@@ -23,13 +24,13 @@ class MapCreator
             $xml .= '<url>' . "\n" .
                     '<loc>' . htmlspecialchars($page['loc']) . '</loc>' . "\n";
 
-            if (key_exists('lastmod', $page)){
+            if (key_exists('lastmod', $page)) {
                 $xml .= '<lastmod>' . $page['lastmod'] . '</lastmod>' . "\n";
             }
-            if (key_exists('priority', $page)){
+            if (key_exists('priority', $page)) {
                 $xml .= '<priority>' . $page['priority'] . '</priority>' . "\n";
             }
-            if (key_exists('changefreq', $page)){
+            if (key_exists('changefreq', $page)) {
                 $xml .= '<changefreq>' . $page['changefreq'] . '</changefreq>' . "\n";
             }
             $xml .= '</url>' . "\n";
@@ -37,7 +38,8 @@ class MapCreator
         return $xml . '</urlset>';
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @return string карта сайта в формате csv
      * */
     public static function createCSV($pages)
@@ -46,17 +48,17 @@ class MapCreator
 
         foreach ($pages as $page) {
             $csv .= $page['loc'] . ';';
-            if (key_exists('lastmod', $page)){
+            if (key_exists('lastmod', $page)) {
                 $csv .= $page['lastmod'] . ';';
             } else {
                 $csv .= ';';
             }
-            if (key_exists('priority', $page)){
+            if (key_exists('priority', $page)) {
                 $csv .= $page['priority'] . ';';
             } else {
                 $csv .= ';';
             }
-            if (key_exists('changefreq', $page)){
+            if (key_exists('changefreq', $page)) {
                 $csv .= $page['changefreq'] . "\n";
             } else {
                 $csv .= "\n";
@@ -65,7 +67,8 @@ class MapCreator
         return $csv;
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @return string карта сайта в формате json
      * */
     public static function createJSON($pages)

@@ -52,12 +52,13 @@ class Validator
         1.0,
     ];
 
-    /** @param string $fileFormat
+    /**
+     * @param string $fileFormat
      * @throws invalidFileFormat
      */
     public static function isValidFileFormat($fileFormat)
     {
-        if (!in_array($fileFormat, self::EXT)){
+        if (!in_array($fileFormat, self::EXT)) {
             throw new invalidFileFormat(
                 sprintf('invalidFileFormat Exception: Указан недопустимый формат файла: %s. Допустимы следующие форматы: %s', $fileFormat, implode(', ', self::EXT))
             );
@@ -65,13 +66,14 @@ class Validator
         }
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws invalidDateFormat
      */
     public static function isValidDateFormat($pages)
     {
         foreach ($pages as $page){
-            if (key_exists('lastmod', $page)){
+            if (key_exists('lastmod', $page)) {
                 $d = DateTime::createFromFormat(self::DATEFORMAT, $page['lastmod']);
 
                 if (!($d && $d->format(self::DATEFORMAT) === $page['lastmod'])) {
@@ -83,13 +85,14 @@ class Validator
         }
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws invalidLenURL
      */
     public static function isValidLenURL($pages)
     {
         foreach ($pages as $page) {
-            if (mb_strlen($page['loc']) > self::LENURL){
+            if (mb_strlen($page['loc']) > self::LENURL) {
                 throw new invalidLenURL(
                     sprintf('invalidLenURL Exception: Длина URL-адреса страницы не должна превышать %s символов.', self::LENURL)
                 );
@@ -97,16 +100,17 @@ class Validator
         }
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws invalidChangeFreqs
      */
     public static function isValidChangeFreqs($pages)
     {
 
         foreach ($pages as $page) {
-            if (key_exists('changefreq', $page)){
+            if (key_exists('changefreq', $page)) {
 
-                if (!in_array($page['changefreq'], self::CHANGEFREQS)){
+                if (!in_array($page['changefreq'], self::CHANGEFREQS)) {
                     throw new invalidChangeFreqs(
                         sprintf('invalidChangeFreqs Exception: Указана недопустимая периодичность обновления страницы: %s. Допустимы следующие значения: %s', $page['changefreq'], implode(', ', self::CHANGEFREQS))
                     );
@@ -115,15 +119,16 @@ class Validator
         }
     }
 
-    /** @param array $pages список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws invalidPriority
      */
     public static function isValidPriority($pages)
     {
         foreach ($pages as $page) {
-            if (key_exists('priority', $page)){
+            if (key_exists('priority', $page)) {
 
-                if (!in_array($page['priority'], self::PRIORITIES)){
+                if (!in_array($page['priority'], self::PRIORITIES)) {
                     throw new invalidPriority(
                         sprintf('invalidPriority Exception: Указана недопустимая приоритетность парсинга страницы: %s. Допустимы следующие значения: %s', $page['priority'], implode('; ', self::PRIORITIES))
                     );
@@ -132,15 +137,16 @@ class Validator
         }
     }
 
-    /** @param string $savePath список страниц сайта в виде массива массивов с параметрами
+    /**
+     * @param string $savePath список страниц сайта в виде массива массивов с параметрами
      * @throws dirNotCreated
      */
     public static function isDir($savePath)
     {
         $dirPath = (pathinfo($savePath)['dirname']);
 
-        if (!is_dir($dirPath)){
-            if (!mkdir($dirPath, 0755)){
+        if (!is_dir($dirPath)) {
+            if (!mkdir($dirPath, 0755)) {
                 throw new dirNotCreated(sprintf('dirNotCreated Exception: Не удалось создать директорию по указанному вами пути: %s.', $dirPath));
             }
         }
