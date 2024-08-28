@@ -2,7 +2,7 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class invalidPriority extends \Exception
+class InvalidChangeFreqs extends \Exception
 {
 
 }

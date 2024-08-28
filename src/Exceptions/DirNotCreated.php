@@ -2,7 +2,9 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class invalidDateFormat extends \Exception
+use Exception;
+
+class DirNotCreated extends Exception
 {
 
 }

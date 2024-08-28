@@ -3,12 +3,12 @@
 namespace OlegTatarenko\Sitemap;
 
 use DateTime;
-use OlegTatarenko\Sitemap\Exceptions\dirNotCreated;
-use OlegTatarenko\Sitemap\Exceptions\invalidChangeFreqs;
-use OlegTatarenko\Sitemap\Exceptions\invalidDateFormat;
-use OlegTatarenko\Sitemap\Exceptions\invalidFileFormat;
-use OlegTatarenko\Sitemap\Exceptions\invalidLenURL;
-use OlegTatarenko\Sitemap\Exceptions\invalidPriority;
+use OlegTatarenko\Sitemap\Exceptions\DirNotCreated;
+use OlegTatarenko\Sitemap\Exceptions\InvalidChangeFreqs;
+use OlegTatarenko\Sitemap\Exceptions\InvalidDateFormat;
+use OlegTatarenko\Sitemap\Exceptions\InvalidFileFormat;
+use OlegTatarenko\Sitemap\Exceptions\InvalidLenURL;
+use OlegTatarenko\Sitemap\Exceptions\InvalidPriority;
 
 /**
  * Валидация входных данных
@@ -54,12 +54,12 @@ class Validator
 
     /**
      * @param string $fileFormat
-     * @throws invalidFileFormat
+     * @throws InvalidFileFormat
      */
     public static function isValidFileFormat($fileFormat)
     {
         if (!in_array($fileFormat, self::EXT)) {
-            throw new invalidFileFormat(
+            throw new InvalidFileFormat(
                 sprintf('invalidFileFormat Exception: Указан недопустимый формат файла: %s. Допустимы следующие форматы: %s', $fileFormat, implode(', ', self::EXT))
             );
 
@@ -68,7 +68,7 @@ class Validator
 
     /**
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
-     * @throws invalidDateFormat
+     * @throws InvalidDateFormat
      */
     public static function isValidDateFormat($pages)
     {
@@ -77,7 +77,7 @@ class Validator
                 $d = DateTime::createFromFormat(self::DATEFORMAT, $page['lastmod']);
 
                 if (!($d && $d->format(self::DATEFORMAT) === $page['lastmod'])) {
-                    throw new invalidDateFormat(
+                    throw new InvalidDateFormat(
                         sprintf('invalidDateFormat Exception: Указан недопустимый формат даты последнего изменения страницы: %s. Допустимый формат: %s', $page['lastmod'], self::DATEFORMAT)
                     );
                 }
@@ -87,13 +87,13 @@ class Validator
 
     /**
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
-     * @throws invalidLenURL
+     * @throws InvalidLenURL
      */
     public static function isValidLenURL($pages)
     {
         foreach ($pages as $page) {
             if (mb_strlen($page['loc']) > self::LENURL) {
-                throw new invalidLenURL(
+                throw new InvalidLenURL(
                     sprintf('invalidLenURL Exception: Длина URL-адреса страницы не должна превышать %s символов.', self::LENURL)
                 );
             }
@@ -102,7 +102,7 @@ class Validator
 
     /**
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
-     * @throws invalidChangeFreqs
+     * @throws InvalidChangeFreqs
      */
     public static function isValidChangeFreqs($pages)
     {
@@ -111,7 +111,7 @@ class Validator
             if (key_exists('changefreq', $page)) {
 
                 if (!in_array($page['changefreq'], self::CHANGEFREQS)) {
-                    throw new invalidChangeFreqs(
+                    throw new InvalidChangeFreqs(
                         sprintf('invalidChangeFreqs Exception: Указана недопустимая периодичность обновления страницы: %s. Допустимы следующие значения: %s', $page['changefreq'], implode(', ', self::CHANGEFREQS))
                     );
                 }
@@ -121,7 +121,7 @@ class Validator
 
     /**
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
-     * @throws invalidPriority
+     * @throws InvalidPriority
      */
     public static function isValidPriority($pages)
     {
@@ -129,7 +129,7 @@ class Validator
             if (key_exists('priority', $page)) {
 
                 if (!in_array($page['priority'], self::PRIORITIES)) {
-                    throw new invalidPriority(
+                    throw new InvalidPriority(
                         sprintf('invalidPriority Exception: Указана недопустимая приоритетность парсинга страницы: %s. Допустимы следующие значения: %s', $page['priority'], implode('; ', self::PRIORITIES))
                     );
                 }
@@ -139,7 +139,7 @@ class Validator
 
     /**
      * @param string $savePath список страниц сайта в виде массива массивов с параметрами
-     * @throws dirNotCreated
+     * @throws DirNotCreated
      */
     public static function isDir($savePath)
     {
@@ -147,7 +147,7 @@ class Validator
 
         if (!is_dir($dirPath)) {
             if (!mkdir($dirPath, 0755)) {
-                throw new dirNotCreated(sprintf('dirNotCreated Exception: Не удалось создать директорию по указанному вами пути: %s.', $dirPath));
+                throw new DirNotCreated(sprintf('dirNotCreated Exception: Не удалось создать директорию по указанному вами пути: %s.', $dirPath));
             }
         }
     }

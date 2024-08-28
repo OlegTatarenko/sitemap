@@ -2,9 +2,7 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-use Exception;
-
-class dirNotCreated extends Exception
+class InvalidLenURL extends \Exception
 {
 
 }

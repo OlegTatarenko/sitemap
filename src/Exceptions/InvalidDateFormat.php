@@ -2,7 +2,7 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class invalidLenURL extends \Exception
+class InvalidDateFormat extends \Exception
 {
 
 }

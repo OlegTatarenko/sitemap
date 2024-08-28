@@ -4,7 +4,7 @@ namespace OlegTatarenko\Sitemap\Exceptions;
 
 use Exception;
 
-class invalidFileFormat extends Exception
+class InvalidFileFormat extends Exception
 {
 
 }
