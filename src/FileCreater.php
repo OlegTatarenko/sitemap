@@ -24,7 +24,7 @@ class FileCreater
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @param string $fileFormat тип файла, в котором будет записана карта сайта
      * @param string $savePath путь для сохранения файла
-     * */
+     */
     public function __construct(array $pages, string $fileFormat, string $savePath)
     {
         $this->pages = $pages;
@@ -48,14 +48,8 @@ class FileCreater
             Validator::isValidPriority($this->pages);
             Validator::isDir($this->savePath);
 
-            $methodsMapCreator = [
-                'xml' => 'createXML',
-                'csv' => 'createCSV',
-                'json' => 'createJSON',
-            ];
-            $method = $methodsMapCreator[$this->fileFormat];
-
-            $mapData = MapCreator::$method($this->pages);//отформатированная строка с картой сайта
+            $mapCreator = MapsCreatorFactory::creat($this->fileFormat);//объект конкретного класса, создаваемый фабрикой в зависимости от формата файла
+            $mapData = $mapCreator->createMap($this->pages);//отформатированная строка с картой сайта
 
             if(!file_put_contents($this->savePath, $mapData)) {
                 throw new Exception(sprintf('Не удалось создать файл по указанному пути: %s.', $this->savePath));

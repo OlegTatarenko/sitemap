@@ -19,7 +19,7 @@ $pages = [
     ]
 ];
 
-$file = new FileCreater($pages, 'xml', 'sitemap.xml');
+$file = new FileCreater($pages, 'jSoN', 'sitemap.xml');
 
 try {
     $file->createFileWithSiteMap();
