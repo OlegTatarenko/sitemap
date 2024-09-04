@@ -4,7 +4,7 @@ namespace OlegTatarenko\Sitemap\Exceptions;
 
 use Exception;
 
-class InvalidPriority extends Exception
+class EmptyPages extends Exception
 {
 
 }

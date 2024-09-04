@@ -2,7 +2,9 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class InvalidLenURL extends \Exception
+use Exception;
+
+class InvalidLenURL extends Exception
 {
 
 }

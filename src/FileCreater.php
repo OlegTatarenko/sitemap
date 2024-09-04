@@ -12,35 +12,24 @@ use Exception;
 class FileCreater
 {
     /** @var array $pages список страниц сайта в виде массива массивов с параметрами */
-    private $pages = [[]];
+    private array $pages;
 
-    /** @var string $fileFormat тип файла, в котором будет записана карта сайта*/
-    private $fileFormat;
+    /** @var string $fileFormat тип файла, в котором будет записана карта сайта */
+    private string $fileFormat;
 
     /** @var string $savePath путь для сохранения файла */
-    private $savePath;
+    private string $savePath;
 
     /**
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @param string $fileFormat тип файла, в котором будет записана карта сайта
      * @param string $savePath путь для сохранения файла
-     * @return string карта сайта в формате xml
      * */
-    public function __construct($pages, $fileFormat, $savePath)
+    public function __construct(array $pages, string $fileFormat, string $savePath)
     {
         $this->pages = $pages;
         $this->fileFormat = strtolower($fileFormat);
-
-        if (key_exists('dirname', pathinfo($savePath))) {
-            $dirName = pathinfo($savePath)['dirname'];
-            $fileName = pathinfo($savePath)['filename'];
-            $savePath = $dirName . '/' . $fileName . '.' . $this->fileFormat;
-            $this->savePath = $savePath;
-        } else {
-            $fileName = pathinfo($savePath)['filename'];
-            $savePath = './' . $fileName . '.' . $this->fileFormat;
-            $this->savePath = $savePath;
-        }
+        $this->savePath = $this->getCorrectPath($savePath);
     }
 
     /**
@@ -50,6 +39,8 @@ class FileCreater
      */
         public function createFileWithSiteMap(): void
         {
+            Validator::isEmptyPages($this->pages);
+            Validator::isExistLoc($this->pages);
             Validator::isValidFileFormat($this->fileFormat);
             Validator::isValidDateFormat($this->pages);
             Validator::isValidLenURL($this->pages);
@@ -71,5 +62,21 @@ class FileCreater
             }
 
             echo 'Файл успешно создан по адресу: ' . $this->savePath;
+        }
+
+        private function getCorrectPath(string $savePath): string
+        {
+            if (key_exists('dirname', pathinfo($savePath))) {
+                $dirName = pathinfo($savePath)['dirname'];
+                if (pathinfo($savePath)['dirname'] == '.') {
+                    $dirName = 'map';
+                }
+                $fileName = pathinfo($savePath)['filename'];
+                $savePath = $dirName . '/' . $fileName . '.' . $this->fileFormat;
+            } else {
+                $fileName = pathinfo($savePath)['filename'];
+                $savePath = './map/' . $fileName . '.' . $this->fileFormat;
+            }
+            return $savePath;
         }
 }

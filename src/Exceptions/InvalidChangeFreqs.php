@@ -2,7 +2,9 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class InvalidChangeFreqs extends \Exception
+use Exception;
+
+class InvalidChangeFreqs extends Exception
 {
 
 }

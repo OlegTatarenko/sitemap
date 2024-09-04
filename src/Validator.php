@@ -4,11 +4,13 @@ namespace OlegTatarenko\Sitemap;
 
 use DateTime;
 use OlegTatarenko\Sitemap\Exceptions\DirNotCreated;
+use OlegTatarenko\Sitemap\Exceptions\EmptyPages;
 use OlegTatarenko\Sitemap\Exceptions\InvalidChangeFreqs;
 use OlegTatarenko\Sitemap\Exceptions\InvalidDateFormat;
 use OlegTatarenko\Sitemap\Exceptions\InvalidFileFormat;
 use OlegTatarenko\Sitemap\Exceptions\InvalidLenURL;
 use OlegTatarenko\Sitemap\Exceptions\InvalidPriority;
+use OlegTatarenko\Sitemap\Exceptions\NotExistLoc;
 
 /**
  * Валидация входных данных
@@ -56,11 +58,11 @@ class Validator
      * @param string $fileFormat
      * @throws InvalidFileFormat
      */
-    public static function isValidFileFormat($fileFormat)
+    public static function isValidFileFormat(string $fileFormat): void
     {
         if (!in_array($fileFormat, self::EXT)) {
             throw new InvalidFileFormat(
-                sprintf('invalidFileFormat Exception: Указан недопустимый формат файла: %s. Допустимы следующие форматы: %s', $fileFormat, implode(', ', self::EXT))
+                sprintf('InvalidFileFormat Exception: Указан недопустимый формат файла: %s. Допустимы следующие форматы: %s', $fileFormat, implode(', ', self::EXT))
             );
 
         }
@@ -70,7 +72,7 @@ class Validator
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws InvalidDateFormat
      */
-    public static function isValidDateFormat($pages)
+    public static function isValidDateFormat(array $pages): void
     {
         foreach ($pages as $page){
             if (key_exists('lastmod', $page)) {
@@ -78,7 +80,7 @@ class Validator
 
                 if (!($d && $d->format(self::DATEFORMAT) === $page['lastmod'])) {
                     throw new InvalidDateFormat(
-                        sprintf('invalidDateFormat Exception: Указан недопустимый формат даты последнего изменения страницы: %s. Допустимый формат: %s', $page['lastmod'], self::DATEFORMAT)
+                        sprintf('InvalidDateFormat Exception: Указан недопустимый формат даты последнего изменения страницы: %s. Допустимый формат: %s', $page['lastmod'], self::DATEFORMAT)
                     );
                 }
             }
@@ -89,12 +91,12 @@ class Validator
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws InvalidLenURL
      */
-    public static function isValidLenURL($pages)
+    public static function isValidLenURL(array $pages): void
     {
         foreach ($pages as $page) {
             if (mb_strlen($page['loc']) > self::LENURL) {
                 throw new InvalidLenURL(
-                    sprintf('invalidLenURL Exception: Длина URL-адреса страницы не должна превышать %s символов.', self::LENURL)
+                    sprintf('InvalidLenURL Exception: Длина URL-адреса страницы не должна превышать %s символов.', self::LENURL)
                 );
             }
         }
@@ -104,7 +106,7 @@ class Validator
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws InvalidChangeFreqs
      */
-    public static function isValidChangeFreqs($pages)
+    public static function isValidChangeFreqs(array $pages): void
     {
 
         foreach ($pages as $page) {
@@ -112,7 +114,7 @@ class Validator
 
                 if (!in_array($page['changefreq'], self::CHANGEFREQS)) {
                     throw new InvalidChangeFreqs(
-                        sprintf('invalidChangeFreqs Exception: Указана недопустимая периодичность обновления страницы: %s. Допустимы следующие значения: %s', $page['changefreq'], implode(', ', self::CHANGEFREQS))
+                        sprintf('InvalidChangeFreqs Exception: Указана недопустимая периодичность обновления страницы: %s. Допустимы следующие значения: %s', $page['changefreq'], implode(', ', self::CHANGEFREQS))
                     );
                 }
             }
@@ -123,14 +125,14 @@ class Validator
      * @param array $pages список страниц сайта в виде массива массивов с параметрами
      * @throws InvalidPriority
      */
-    public static function isValidPriority($pages)
+    public static function isValidPriority(array $pages): void
     {
         foreach ($pages as $page) {
             if (key_exists('priority', $page)) {
 
                 if (!in_array($page['priority'], self::PRIORITIES)) {
                     throw new InvalidPriority(
-                        sprintf('invalidPriority Exception: Указана недопустимая приоритетность парсинга страницы: %s. Допустимы следующие значения: %s', $page['priority'], implode('; ', self::PRIORITIES))
+                        sprintf('InvalidPriority Exception: Указана недопустимая приоритетность парсинга страницы: %s. Допустимы следующие значения: %s', $page['priority'], implode('; ', self::PRIORITIES))
                     );
                 }
             }
@@ -141,13 +143,43 @@ class Validator
      * @param string $savePath список страниц сайта в виде массива массивов с параметрами
      * @throws DirNotCreated
      */
-    public static function isDir($savePath)
+    public static function isDir(string $savePath): void
     {
         $dirPath = (pathinfo($savePath)['dirname']);
 
         if (!is_dir($dirPath)) {
             if (!mkdir($dirPath, 0755)) {
-                throw new DirNotCreated(sprintf('dirNotCreated Exception: Не удалось создать директорию по указанному вами пути: %s.', $dirPath));
+                throw new DirNotCreated(sprintf('DirNotCreated Exception: Не удалось создать директорию по указанному вами пути: %s.', $dirPath));
+            }
+        }
+    }
+
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
+     * @throws EmptyPages
+     */
+    public static function isEmptyPages(array $pages): void
+    {
+        if (empty($pages) or !is_array($pages)) {
+            throw new EmptyPages('EmptyPages Exception: В полученном массиве страниц нет данных либо полученные данные не являются массивом');
+        } else {
+            foreach ($pages as $page) {
+                if (empty($page)) {
+                    throw new EmptyPages('EmptyPages Exception: В полученном массиве одна из страниц не содержит данных');
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array $pages список страниц сайта в виде массива массивов с параметрами
+     * @throws NotExistLoc
+     */
+    public static function isExistLoc(array $pages): void
+    {
+        foreach ($pages as $page) {
+            if (!key_exists('loc', $page)) {
+                throw new NotExistLoc('NotExistLoc Exception: В полученных данных отсутствует обязательный тег loc в одной или всех страницах');
             }
         }
     }

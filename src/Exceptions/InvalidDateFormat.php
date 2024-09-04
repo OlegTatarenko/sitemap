@@ -2,7 +2,9 @@
 
 namespace OlegTatarenko\Sitemap\Exceptions;
 
-class InvalidDateFormat extends \Exception
+use Exception;
+
+class InvalidDateFormat extends Exception
 {
 
 }
